@@ -1,0 +1,10 @@
+.bg-custom {
+    background-color: rgb(173, 231, 173) !important;
+}
+
+#current-weather {
+    display:none; 
+}
+#five-day {
+    display: none;
+}
