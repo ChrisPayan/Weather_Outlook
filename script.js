@@ -66,7 +66,6 @@ $("#user-input").submit(function weatherCall(event) {
                 currentCity.html(cityName + "  " + date);
                 currentHumidity.html("Humidity: " + humid);
                 currentTemperature.html("Temperature: " + temp);
-                // currentUVIndex.html()
                 currentWindSpeed.html("Wind Speed: " + windspeed);
 
 
@@ -95,7 +94,22 @@ $("#user-input").submit(function weatherCall(event) {
                          }
                      })
                  });
+                    var uvIndexUrl ="https://api.openweathermap.org/data/2.5/uvi?lat="+ 
+                data.coord.lat+ "&lon=" +data.coord.lon+ "&appid=383f2227a811246655ccc2a5999d7dd2";
+                fetch(uvIndexUrl)
+                .then(function(uvData){
+                    console.log(uvData);
+                    uvData.json()
+                    .then(data => {
+                        console.log(data.value);
+                        currentUVIndex.html("UV Index: " + data.value);
+                        $("#current-weather").css("display", "block");
+                        $("#five-day").css("display", "block");
+
+                    });
+                }); 
             });
+            
 
         } else {
             return;

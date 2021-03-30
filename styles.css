@@ -3,10 +3,10 @@
 }
 
 #current-weather {
-    /* display:none;  */
+    display:none; 
 }
 #five-day {
-    /* display: none; */
+    display: none;
 }
 .customBtn {
     display: none;
