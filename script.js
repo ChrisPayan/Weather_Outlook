@@ -37,13 +37,31 @@ var humidity = [
     $("#humi-humi-4"),
     $("#humi-humi-5"),
 ]
+var travelOptions = [
+    $("#city1"),
+    $("#city2"),
+    $("#city3"),
+    $("#city4"),
+    $("#city5"),
+    $("#city6"),
 
+]
+//When a new location is inputted push all value down 1
+function getStored() {
+    var citySaved = window.localStorage;
+    console.log(citySaved.length)
+    for (i=0; i < citySaved.length; i+=1) {
+    $(travelOptions[i]).html(window.localStorage.key(i));
+    $(travelOptions[i]).css("display", "block");
+    };
+}
 
 
 $("#user-input").submit(function weatherCall(event) {
     event.preventDefault();
     var city = userInput.val()
     city = city.replace(/\s+/g, '+').toLowerCase();
+    var userCity = userInput.val()
     $("#user-input").trigger("reset");
 
     var CurrentDayUrl = "HTTPS://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=383f2227a811246655ccc2a5999d7dd2";
@@ -95,9 +113,9 @@ $("#user-input").submit(function weatherCall(event) {
                      })
                  });
                     var uvIndexUrl ="https://api.openweathermap.org/data/2.5/uvi?lat="+ 
-                data.coord.lat+ "&lon=" +data.coord.lon+ "&appid=383f2227a811246655ccc2a5999d7dd2";
-                fetch(uvIndexUrl)
-                .then(function(uvData){
+                    data.coord.lat+ "&lon=" +data.coord.lon+ "&appid=383f2227a811246655ccc2a5999d7dd2";
+                    fetch(uvIndexUrl)
+                    .then(function(uvData){
                     console.log(uvData);
                     uvData.json()
                     .then(data => {
@@ -105,8 +123,10 @@ $("#user-input").submit(function weatherCall(event) {
                         currentUVIndex.html("UV Index: " + data.value);
                         $("#current-weather").css("display", "block");
                         $("#five-day").css("display", "block");
-
                     });
+                    window.localStorage.setItem(userCity, userCity);
+                    window.localStorage.getItem(userCity);
+                    getStored();
                 }); 
             });
             
