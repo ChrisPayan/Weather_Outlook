@@ -1,4 +1,43 @@
 var userInput = $("#cities");
+var currentCity = $("#currentCity");
+var currentDay = $("#currentDay");
+var currentTemperature = $("#currentTemp");
+var currentUVIndex = $("#currentUVIndex");
+var currentHumidity = $("#currentHumidity");
+var currentWindSpeed = $("#currentWindSpeed");
+
+var days = [
+    $("#day-1"),
+    $("#day-2"),
+    $("#day-3"),
+    $("#day-4"),
+    $("#day-5"),
+];
+
+var icons = [
+    $("#icon-day-1"),
+    $("#icon-day-2"),
+    $("#icon-day-3"),
+    $("#icon-day-4"),
+    $("#icon-day-5"),
+]
+
+var temperature = [
+    $("#temp-day-1"),
+    $("#temp-day-2"),
+    $("#temp-day-3"),
+    $("#temp-day-4"),
+    $("#temp-day-5"),
+]
+
+var humidity = [
+    $("#humi-humi-1"),
+    $("#humi-humi-2"),
+    $("#humi-humi-3"),
+    $("#humi-humi-4"),
+    $("#humi-humi-5"),
+]
+
 
 
 $("#user-input").submit(function weatherCall(event) {
@@ -15,12 +54,55 @@ $("#user-input").submit(function weatherCall(event) {
             
             weatherInfo.json()
             .then(data=>{
-                console.log(data);
+                console.log(data); 
+
+                var cityName = data.name;
+                console.log(cityName);
+                var date = moment().format("MM/DD/YYYY");
+                var temp = data.main.temp;
+                var humid = data.main.humidity;
+                var windspeed = data.wind.speed;
+
+                currentCity.html(cityName + "  " + date);
+                currentHumidity.html("Humidity: " + humid);
+                currentTemperature.html("Temperature: " + temp);
+                // currentUVIndex.html()
+                currentWindSpeed.html("Wind Speed: " + windspeed);
+
+
+                // console.log(date);
+                var icon = data.weather[0].icon;
+                var iconUrl = "HTTPS://openweathermap.org/img/wn/" + icon + "@2x.png";
+                console.log(iconUrl);
+                $("#currentDayIcon").attr("src", iconUrl);
+
+                var fiveDayUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + data.coord.lat + "&lon=" + data.coord.lon + "&exclude=current,minutely,hourly,alerts&units=imperial&appid=383f2227a811246655ccc2a5999d7dd2"
+                fetch (fiveDayUrl)
+                 .then(function (fiveDayWeather){
+                     console.log(fiveDayUrl);
+                     fiveDayWeather.json()
+                     .then(data=>{
+                         console.log(data);
+                         for(i=1; i<6; i++) {
+                             var dataday = moment.unix(data.daily[i].dt).format("MM/DD/YYYY");
+                             days[i-1].html(dataday);
+
+                             var iconCode = data.daily[i].weather[0].icon;
+                             var weatherIconUrl = "HTTPS://openweathermap.org/img/wn/" + iconCode + "@2x.png";
+                             icons[i-1].attr("src", weatherIconUrl);
+                             temperature[i-1].html("temperature: " + data.daily[i].temp.day);
+                             humidity[i-1].html("humidity: " + data.daily[i].humidity);
+                         }
+                     })
+                 });
             });
 
         } else {
             return;
         }
+       
     });
+
+
     
 });
